@@ -1,0 +1,601 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FATHER FORCE | POLICE SYSTEM</title>
+
+<style>
+:root {
+  --blue:#00eaff;
+  --blue2:#0878ff;
+  --bg:#050b14;
+  --panel:#0b1726;
+  --text:#e7f8ff;
+  --muted:#8ba7bd;
+  --green:#00ff9d;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;background:var(--bg);color:var(--text);
+  font-family:Consolas,"Courier New",monospace;
+  min-height:100vh;
+}
+body:before{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:linear-gradient(#00eaff08 1px,transparent 1px),
+  linear-gradient(90deg,#00eaff08 1px,transparent 1px);
+  background-size:35px 35px;
+}
+button,input,textarea{font:inherit}
+button{cursor:pointer}
+.hidden{display:none!important}
+#login{
+  position:relative;z-index:1;min-height:100vh;
+  display:flex;align-items:center;justify-content:center;padding:20px;
+}
+.login-box{
+  width:100%;max-width:430px;padding:30px;
+  border:1px solid var(--blue);background:#07111df2;
+  box-shadow:0 0 35px #00eaff20;
+  text-align:center;position:relative;
+}
+.logo{
+  width:80px;height:80px;margin:0 auto 18px;
+  border:2px solid var(--blue);border-radius:50%;
+  display:grid;place-items:center;font-size:34px;
+  box-shadow:0 0 25px #00eaff40;
+}
+h1,h2,h3,p{overflow-wrap:anywhere}
+h1{font-size:clamp(22px,5vw,32px);margin:8px 0;color:var(--blue)}
+.subtitle{font-size:11px;letter-spacing:3px;color:var(--muted)}
+.line{height:1px;background:var(--blue);opacity:.5;margin:22px 0}
+label{display:block;text-align:left;font-size:12px;color:var(--blue);margin:12px 0 8px}
+input,textarea{
+  width:100%;padding:13px;color:white;background:#030912;
+  border:1px solid #24516a;outline:none;border-radius:3px;
+}
+input:focus,textarea:focus{border-color:var(--blue)}
+.btn{
+  background:var(--blue);color:#00121c;border:0;
+  padding:12px 16px;font-weight:bold;transition:.2s;
+}
+.btn:hover{box-shadow:0 0 18px #00eaff75;transform:translateY(-1px)}
+.btn-outline{background:transparent;color:var(--blue);border:1px solid var(--blue)}
+.full{width:100%;margin-top:18px}
+.error{color:#ff657a;font-size:12px;min-height:18px}
+#app{position:relative;z-index:1;max-width:1500px;margin:auto;padding:18px}
+.topbar{
+  display:flex;justify-content:space-between;align-items:center;
+  flex-wrap:wrap;gap:15px;border-bottom:1px solid #1c465e;padding:12px 0 20px;
+}
+.brand{font-weight:bold;font-size:20px;color:var(--blue)}
+.brand small{display:block;font-size:10px;letter-spacing:3px;color:var(--muted);margin-top:6px}
+.status{font-size:11px;color:var(--green)}
+.layout{display:grid;grid-template-columns:225px minmax(0,1fr);gap:20px;margin-top:20px}
+.sidebar,.panel,.stat{
+  border:1px solid #17384c;background:#091421;
+}
+.sidebar{padding:14px;height:max-content;position:sticky;top:12px}
+.side-title{font-size:10px;color:var(--muted);letter-spacing:2px;padding:8px}
+.nav{
+  display:block;width:100%;text-align:left;padding:13px 10px;
+  color:#aac4d7;background:transparent;border:0;border-left:2px solid transparent;
+  margin:3px 0;
+}
+.nav:hover,.nav.active{color:var(--blue);background:#00eaff0c;border-left-color:var(--blue)}
+main{min-width:0}
+.page{display:none;animation:fade .3s ease}
+.page.active{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+.panel{padding:22px;margin-bottom:16px}
+.eyebrow{font-size:11px;color:var(--blue);letter-spacing:2px}
+.hero{
+  min-height:230px;display:flex;align-items:center;
+  background:linear-gradient(110deg,#071a2a,#071421 60%,#06334b);
+  border:1px solid #14617b;padding:25px;position:relative;overflow:hidden;
+}
+.hero:after{
+  content:"◉";position:absolute;right:15px;top:10px;
+  font-size:150px;color:#00eaff10;
+}
+.hero h2{font-size:clamp(25px,5vw,43px);margin:12px 0}
+.hero p{color:#a7c6d8;max-width:560px;line-height:1.8}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:16px 0}
+.stat{padding:17px}
+.stat strong{display:block;color:var(--blue);font-size:22px;margin:10px 0}
+.stat small{color:var(--muted)}
+.section-title{font-size:19px;margin:0 0 17px}
+.muted{color:var(--muted);line-height:1.8}
+.tag{display:inline-block;color:var(--green);border:1px solid #00ff9d50;padding:5px 8px;font-size:10px}
+.letter{
+  white-space:pre-wrap;line-height:2;color:#d6eaf5;
+  background:#040b13;padding:20px;border-left:2px solid var(--blue);
+}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.photo-card{border:1px solid #214257;padding:10px;background:#050c15}
+.photo-card img{width:100%;height:200px;object-fit:cover;background:#0b1c2b;display:block}
+.photo-card p{font-size:12px;color:var(--muted)}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.actions .btn{font-size:12px}
+textarea{min-height:110px;resize:vertical;line-height:1.7}
+.terminal{
+  background:#02070d;padding:16px;border:1px solid #17425a;
+  color:var(--green);line-height:2;overflow-wrap:anywhere;
+}
+.game-choice{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.game-choice button{font-size:23px;padding:18px 5px}
+footer{text-align:center;color:#526f82;font-size:10px;padding:24px}
+#toast{
+  position:fixed;bottom:20px;left:50%;transform:translateX(-50%);
+  background:#00eaff;color:#00121c;padding:13px 20px;z-index:10;
+  font-size:12px;max-width:90%;text-align:center;
+}
+@media(max-width:760px){
+  #app{padding:12px}
+  .layout{grid-template-columns:1fr}
+  .sidebar{position:static;display:flex;gap:4px;overflow-x:auto;padding:8px}
+  .side-title{display:none}
+  .nav{white-space:nowrap;width:auto;flex-shrink:0;font-size:11px;padding:11px 12px}
+  .stats{grid-template-columns:1fr}
+  .stat{padding:12px}
+  .grid{grid-template-columns:1fr}
+  .panel{padding:16px}
+  .hero{padding:18px}
+}
+</style>
+</head>
+<body>
+
+<!-- HALAMAN LOGIN -->
+<section id="login">
+  <div class="login-box">
+    <div class="logo">🛡️</div>
+    <div class="subtitle">CENTRAL POLICE DATABASE</div>
+    <h1>FATHER FORCE</h1>
+    <p class="muted">SISTEM KHUSUS UNTUK SEORANG AYAH HEBAT DARI ABANG DAN ADEK</p>
+    <div class="line"></div>
+
+    <div class="tag">● SYSTEM ONLINE</div>
+
+    <label for="pass">IDENTITAS AYAH / KATA SANDI BERUPA NAMA ANAK PERTAMA AYAH </label>
+    <input id="pass" type="password" placeholder="Masukkan nama..." autocomplete="off">
+    <button class="btn full" onclick="login()">AKSES SISTEM →</button>
+    <p id="error" class="error"></p>
+    <p class="muted" style="font-size:10px">AUTHORIZED FAMILY ACCESS ONLY</p>
+  </div>
+</section>
+
+<!-- APLIKASI UTAMA -->
+<div id="app" class="hidden">
+  <header class="topbar">
+    <div class="brand">🛡 FATHER FORCE
+      <small>FAMILY PROTECTION DIVISION</small>
+    </div>
+    <div>
+      <div class="status">● CONNECTION SECURE</div>
+      <div id="clock" style="font-size:12px;margin-top:7px"></div>
+    </div>
+    <button class="btn btn-outline" onclick="logout()">KELUAR ⏻</button>
+  </header>
+
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="side-title">MAIN TERMINAL / MENU</div>
+      <button class="nav active" onclick="showPage('home',this)">⌂ Dashboard</button>
+      <butto class="nav" onclick="showPage('letter',this)">▤ Surat untuk Ayah</butto>
+      <button class="nav" onclick="showPage('memory',this)">◈ Arsip Kenangan</button>
+      <button class="nav" onclick="showPage('secret',this)">▣ Pesan Rahasia</button>
+      <button class="nav" onclick="showPage('game',this)">✦ Mini Game</button>
+      <button class="nav" onclick="showPage('settings',this)">⚙ Pengaturan</button>
+    </aside>
+
+    <main>
+      <!-- DASHBOARD -->
+      <section id="home" class="page active">
+        <div class="hero">
+          <div>
+            <div class="eyebrow">CONFIDENTIAL FILE // 001</div>
+            <h2>SELAMAT DATANG DI WEBSITE CYBERPOLICE, WEBSITE INI KHUSUS BUAT AYAH DARI ANAKMU <spa id="fatherName">FATHER</spa</h2>
+            <p>Selamat datang di pusat arsip keluarga. Ada sebuah pesan istimewa yang telah disiapkan khusus untuk seseorang yang selalu menjadi pelindung keluarga.</p>
+            <button class="btn" onclick="showPage('letter')">BUKA SURAT KHUSUS →</button>
+          </div>
+        </div>
+
+        <div class="stats">
+          <div class="stat"><small>STATUS MISI</small><strong>ACTIVE</strong><span class="tag">PROTECT FAMILY</span></div>
+          <div class="stat"><small>ARSIP KENANGAN</small><strong id="photoCount">00</strong><small>Foto tersimpan di sesi ini</small></div>
+          <div class="stat"><small>TINGKAT AKSES</small><strong>LEVEL 01</strong><small>Family personnel</small></div>
+        </div>
+
+        <div class="panel">
+          <div class="eyebrow">SYSTEM MESSAGE</div>
+          <h3>Pesan dari markas keluarga</h3>
+          <p class="muted">Tidak semua pahlawan memakai jubah. Ada yang bekerja keras setiap hari, menjaga keluarga, dan tetap berusaha tersenyum meskipun lelah. Bagi keluarga ini, salah satunya adalah Ayah.</p>
+          <button class="btn btn-outline" onclick="showPage('memory')">LIHAT ARSIP KENANGAN</button>
+        </div>
+
+        <div class="panel">
+          <div class="eyebrow">LIVE TERMINAL</div>
+          <div class="terminal" id="terminal">
+            &gt; Initializing family database...<br>
+            &gt; Security protocol loaded...<br>
+            &gt; Welcome to FATHER FORCE.
+          </div>
+        </div>
+      </section>
+
+      <!-- SURAT -->
+      <section id="letter" class="page">
+        <div class="panel">
+          <div class="eyebrow">DOCUMENT NO. 001 // CLASSIFIED</div>
+          <h2 class="section-title">✉ Surat Khusus untuk Ayah</h2>
+          <div class="line"></div>
+          <div class="letter" id="letterText">Untuk Ayah tercinta,
+
+Terima kasih karena selalu berusaha memberikan yang terbaik untuk keluarga. Terima kasih atas setiap perjuangan, nasihat, perhatian, dan kasih sayang yang mungkin tidak selalu Ayah ungkapkan dengan kata-kata.
+
+Abang tahu tidak setiap hari terasa mudah. Ada banyak hal yang mungkin Ayah pikirkan dan perjuangkan demi keluarga. Abang mungkin belum selalu bisa membalas semua kebaikan Ayah, tetapi abang ingin Ayah tahu bahwa kehadiran Ayah sangat berarti bagiku.
+
+Ayah adalah salah satu sosok yang membuat abang belajar tentang tanggung jawab, keteguhan, dan arti menyayangi keluarga.
+
+Maaf jika terkadang abang membuat Ayah khawatir, belum mendengarkan nasihat dengan baik, atau belum bisa menunjukkan rasa terima kasih abang.
+
+Abang berharap Ayah selalu diberi kesehatan, kebahagiaan, dan kekuatan dalam menjalani hari-hari.
+
+Terima kasih sudah menjadi Ayahku. Abang bangga memiliki Ayah.
+
+Dengan penuh kasih sayang,
+Anakmu ❤️</div>
+          <div class="actions">
+            <button class="btn" onclick="copyLetter()">SALIN SURAT</button>
+            <button class="btn btn-outline" onclick="window.print()">CETAK / PDF</button>
+            <button class="btn btn-outline" onclick="showPage('secret')">PESAN TAMBAHAN →</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- KENANGAN -->
+      <section id="memory" class="page">
+        <div class="panel">
+          <div class="eyebrow">MEMORY ARCHIVE // FAMILY RECORDS</div>
+          <h2 class="section-title">◈ Arsip Kenangan</h2>
+          <p class="muted">Simpan cerita kecil yang tidak ingin dilupakan. Kenangan sederhana sering kali menjadi bagian paling berharga dari hidup kita.</p>
+          <label for="memoryTitle">Judul kenangan</label>
+          <input id="memoryTitle" placeholder="Contoh: Hari paling menyenangkan">
+          <label for="memoryText">Ceritakan kenangannya</label>
+          <textarea id="memoryText" placeholder="Tuliskan cerita Ayah bersama abang,adek,bunda dan bungsu di sini..."></textarea>
+          <button class="btn full" onclick="saveMemory()">SIMPAN KE ARSIP</button>
+        </div>
+        <div id="memoryList"></div>
+      </section>
+
+      <!-- PESAN RAHASIA -->
+      <section id="secret" class="page">
+        <div class="panel">
+          <div class="eyebrow">ENCRYPTED FAMILY MESSAGE</div>
+          <h2 class="section-title">▣ Pesan Rahasia</h2>
+          <p class="muted">Sebuah pesan kecil yang bisa Ayah buka saat membutuhkan semangat.</p>
+          <div class="terminal" id="secretBox">
+            &gt; ENCRYPTED MESSAGE DETECTED<br>
+            &gt; Tekan tombol untuk membuka pesan.
+          </div>
+          <button class="btn full" onclick="revealSecret()">DECRYPT MESSAGE 🔓</button>
+          <div class="line"></div>
+          <label for="customSecret">Tulis pesan rahasiamu sendiri</label>
+          <textarea id="customSecret" placeholder="Tulis pesan khusus untuk keluarga Ayah tercinta..."></textarea>
+          <button class="btn btn-outline full" onclick="saveSecret()">SIMPAN PESAN</button>
+        </div>
+      </section>
+
+      <!-- MINI GAME -->
+      <section id="game" class="page">
+        <div class="panel">
+          <div class="eyebrow">TRAINING SIMULATION // 01</div>
+          <h2 class="section-title">✦ Mini Game: Kode Polisi</h2>
+          <p class="muted">Pilih kode yang benar untuk menyelesaikan simulasi. Ini adalah permainan sederhana, bukan kode operasional kepolisian.</p>
+          <div class="terminal" id="question">MISI: Pilih angka yang merupakan hasil 7 × 8.</div>
+          <div class="game-choice" style="margin-top:16px">
+            <button class="btn btn-outline" onclick="answer(42)">42</button>
+            <button class="btn btn-outline" onclick="answer(56)">56</button>
+            <button class="btn btn-outline" onclick="answer(64)">64</button>
+          </div>
+          <p id="gameResult" class="muted">STATUS: MENUNGGU JAWABAN</p>
+          <button class="btn full" onclick="resetGame()">ULANGI SIMULASI</button>
+        </div>
+        <div class="panel">
+          <div class="eyebrow">BONUS MISSION</div>
+          <h3>Pesan penyemangat</h3>
+          <p id="motivation" class="muted">Ayah, terima kasih sudah menjadi pahlawan di rumah.</p>
+          <button class="btn btn-outline" onclick="newMotivation()">GENERATE PESAN</button>
+        </div>
+      </section>
+
+      <!-- PENGATURAN -->
+      <section id="settings" class="page">
+        <div class="panel">
+          <div class="eyebrow">SYSTEM CONFIGURATION</div>
+          <h2 class="section-title">⚙ Pengaturan Website</h2>
+          <label for="newName">Nama tampilan Ayah</label>
+          <input id="newName" placeholder="Nama Ayah">
+          <button class="btn full" onclick="changeName()">UPDATE IDENTITAS</button>
+
+          <div class="line"></div>
+          <label for="newPassword">Ubah nama sandi untuk sesi berikutnya</label>
+          <input id="newPassword" type="password" placeholder="Nama sandi baru">
+          <button class="btn btn-outline full" onclick="changePassword()">UBAH SANDI</button>
+          
+
+          <div class="line"></div>
+          <button class="btn btn-outline" onclick="resetData()">RESET DATA SESI</button>
+          <p class="muted" style="font-size:11px">Reset akan menghapus foto, kenangan, dan pesan yang tersimpan dalam sesi halaman ini.</p>
+        </div>
+      </section>
+    </main>
+  </div>
+  <footer>FATHER FORCE © 2026 // MADE WITH LOVE FOR FATHER</footer>
+</div>
+
+<div id="toast" class="hidden"></div>
+
+<script>
+/*
+  KONFIGURASI LOGIN
+  Ganti nama di bawah ini sesuai nama sandi Ayah.
+  Contoh: const DEFAULT_PASSWORD = "BUDI";
+*/
+const DEFAULT_PASSWORD = "Dzakiyy";
+
+let password = DEFAULT_PASSWORD;
+let father = "AYAH";
+let photos = [];
+let memories = [];
+let savedSecret = "";
+let musicUrl = "";
+let gameSolved = false;
+
+const $ = id => document.getElementById(id);
+
+function notify(message){
+  const t = $("toast");
+  t.textContent = message;
+  t.classList.remove("hidden");
+  clearTimeout(window.toastTimer);
+  window.toastTimer = setTimeout(()=>t.classList.add("hidden"),2500);
+}
+
+function login(){
+  const value = $("pass").value.trim();
+  if(value && value.toLocaleLowerCase("id-ID") === password.toLocaleLowerCase("id-ID")){
+    father = value.toLocaleUpperCase("id-ID");
+    $("fatherName").textContent = father;
+    $("newName").value = father;
+    $("login").classList.add("hidden");
+    $("app").classList.remove("hidden");
+    $("error").textContent = "";
+    showPage("home");
+    addLog("Access granted for " + father);
+  }else{
+    $("error").textContent = "AKSES DITOLAK — NAMA SANDI TIDAK COCOK.";
+    $("pass").value = "";
+  }
+}
+
+$("pass").addEventListener("keydown",e=>{
+  if(e.key==="Enter") login();
+});
+
+function logout(){
+  $("app").classList.add("hidden");
+  $("login").classList.remove("hidden");
+  $("pass").value="";
+}
+
+function showPage(id,button){
+  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+  document.querySelectorAll(".nav").forEach(n=>n.classList.remove("active"));
+  $(id).classList.add("active");
+  if(button) button.classList.add("active");
+  else{
+    const navs = [...document.querySelectorAll(".nav")];
+    const index = ["home","letter","gallery","memory","secret","game","settings"].indexOf(id);
+    if(navs[index]) navs[index].classList.add("active");
+  }
+  addLog("Module opened: " + id.toUpperCase());
+}
+
+function addLog(message){
+  const terminal = $("terminal");
+  if(!terminal) return;
+  const line = document.createElement("div");
+  line.textContent = "> " + new Date().toLocaleTimeString("id-ID") + " // " + message;
+  terminal.appendChild(line);
+  while(terminal.children.length>7) terminal.removeChild(terminal.firstChild);
+}
+
+function updateClock(){
+  $("clock").textContent = new Date().toLocaleString("id-ID",{
+    dateStyle:"medium",timeStyle:"medium"
+  });
+}
+setInterval(updateClock,1000);
+updateClock();
+
+async function copyLetter(){
+  try{
+    await navigator.clipboard.writeText($("letterText").textContent);
+    notify("Surat berhasil disalin!");
+  }catch(e){
+    notify("Salin teks surat secara manual.");
+  }
+}
+
+// GALERI: masing-masing foto memiliki sumber file sendiri
+function addPhoto(){
+  const file = $("photoInput").files[0];
+  if(!file){notify("Pilih foto terlebih dahulu.");return;}
+  if(!file.type.startsWith("image/")){notify("File harus berupa gambar.");return;}
+  if(file.size>8*1024*1024){notify("Ukuran foto maksimal 8 MB.");return;}
+  const url = URL.createObjectURL(file);
+  photos.push({title:$("photoTitle").value.trim()||file.name,url});
+  renderPhotos();
+  $("photoTitle").value="";
+  $("photoInput").value="";
+  notify("Foto ditambahkan ke galeri.");
+}
+
+function renderPhotos(){
+  const grid = $("galleryGrid");
+  grid.replaceChildren();
+  photos.forEach((photo,index)=>{
+    const card=document.createElement("div");
+    card.className="photo-card";
+    const img=document.createElement("img");
+    img.src=photo.url;
+    img.alt=photo.title;
+    const title=document.createElement("p");
+    title.textContent="FILE "+String(index+1).padStart(3,"0")+" // "+photo.title;
+    const input=document.createElement("input");
+    input.type="file";
+    input.accept="image/*";
+    input.setAttribute("aria-label","Ganti foto "+photo.title);
+    const actions=document.createElement("div");
+    actions.className="actions";
+    const replace=document.createElement("button");
+    replace.className="btn btn-outline";
+    replace.textContent="GANTI FOTO";
+    replace.onclick=()=>{
+      const file=input.files[0];
+      if(!file)return;
+      if(!file.type.startsWith("image/")||file.size>8*1024*1024){
+        notify("Pilih gambar yang valid, maksimal 8 MB.");return;
+      }
+      URL.revokeObjectURL(photos[index].url);
+      photos[index].url=URL.createObjectURL(file);
+      photos[index].title=file.name;
+      renderPhotos();
+      notify("Foto berhasil diganti.");
+    };
+    const remove=document.createElement("button");
+    remove.className="btn btn-outline";
+    remove.textContent="HAPUS";
+    remove.onclick=()=>{
+      URL.revokeObjectURL(photos[index].url);
+      photos.splice(index,1);
+      renderPhotos();
+    };
+    actions.append(replace,remove);
+    card.append(img,title,input,actions);
+    grid.append(card);
+  });
+  $("photoCount").textContent=String(photos.length).padStart(2,"0");
+}
+
+// ARSIP KENANGAN
+function saveMemory(){
+  const title=$("memoryTitle").value.trim();
+  const text=$("memoryText").value.trim();
+  if(!title||!text){notify("Isi judul dan cerita kenangan.");return;}
+  memories.unshift({title,text,date:new Date().toLocaleDateString("id-ID")});
+  $("memoryTitle").value="";
+  $("memoryText").value="";
+  renderMemories();
+  notify("Kenangan berhasil diarsipkan.");
+}
+
+function renderMemories(){
+  const list=$("memoryList");
+  list.replaceChildren();
+  memories.forEach((m,i)=>{
+    const panel=document.createElement("div");
+    panel.className="panel";
+    const heading=document.createElement("h3");
+    heading.textContent="◈ "+m.title;
+    const date=document.createElement("small");
+    date.className="muted";
+    date.textContent="FILE DATE: "+m.date;
+    const content=document.createElement("p");
+    content.className="muted";
+    content.style.whiteSpace="pre-wrap";
+    content.textContent=m.text;
+    const del=document.createElement("button");
+    del.className="btn btn-outline";
+    del.textContent="HAPUS ARSIP";
+    del.onclick=()=>{memories.splice(i,1);renderMemories()};
+    panel.append(heading,date,content,del);
+    list.append(panel);
+  });
+}
+
+// PESAN RAHASIA
+function revealSecret(){
+  $("secretBox").textContent=savedSecret
+    ? ">> DECRYPTION SUCCESSFUL\n\n"+savedSecret
+    : ">> DECRYPTION SUCCESSFUL\n\nAyah, terima kasih atas semua perjuanganmu. Abang sayang Ayah dan berharap Ayah selalu sehat dan bahagia. ❤️";
+}
+function saveSecret(){
+  savedSecret=$("customSecret").value.trim();
+  if(!savedSecret){notify("Tulis pesan terlebih dahulu.");return;}
+  $("customSecret").value="";
+  notify("Pesan disimpan selama halaman aktif.");
+}
+
+// MINI GAME
+function answer(value){
+  if(gameSolved){notify("Simulasi sudah selesai. Silakan ulangi.");return;}
+  if(value===56){
+    gameSolved=true;
+    $("gameResult").textContent="✓ MISI BERHASIL! KODE BENAR. +100 AYAH YANG HEBAT";
+    $("gameResult").style.color="var(--green)";
+  }else{
+    $("gameResult").textContent="✕ KODE SALAH. COBA LAGI!";
+    $("gameResult").style.color="#ff657a";
+  }
+}
+function resetGame(){
+  gameSolved=false;
+  $("gameResult").textContent="STATUS: MENUNGGU JAWABAN";
+  $("gameResult").style.color="var(--muted)";
+}
+function newMotivation(){
+  const messages=[
+    "Ayah, terima kasih sudah menjadi pahlawan di rumah. ❤️",
+    "Misi hari ini: tetap sehat dan jangan lupa bahagia, Yah!",
+    "Tidak ada pangkat yang lebih hebat daripada menjadi Ayah yang penuh kasih.",
+    "Ayah tidak harus selalu kuat. Semoga Ayah selalu punya alasan untuk tersenyum.",
+    "Terima kasih atas setiap usaha yang Ayah lakukan untuk keluarga."
+  ];
+  $("motivation").textContent=messages[Math.floor(Math.random()*messages.length)];
+}
+
+// PENGATURAN
+function changeName(){
+  const value=$("newName").value.trim();
+  if(!value){notify("Masukkan nama terlebih dahulu.");return;}
+  father=value.toLocaleUpperCase("id-ID");
+  $("fatherName").textContent=father;
+  notify("Nama tampilan diperbarui.");
+}
+function changePassword(){
+  const value=$("newPassword").value.trim();
+  if(!value){notify("Masukkan nama sandi baru.");return;}
+  password=value;
+  $("newPassword").value="";
+  notify("Sandi diperbarui untuk sesi aktif.");
+}
+function resetData(){
+  if(!confirm("Hapus semua foto, kenangan, dan pesan selama sesi ini?"))return;
+  photos.forEach(p=>URL.revokeObjectURL(p.url));
+  photos=[];
+  memories=[];
+  savedSecret="";
+  $("customSecret").value="";
+  renderPhotos();
+  renderMemories();
+  $("secretBox").textContent=">> DATA RESET.";
+  notify("Data sesi telah dibersihkan.");
+}
+</script>
+</body>
+</html>
